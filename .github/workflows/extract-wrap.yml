@@ -1,0 +1,35 @@
+name: Extract Wrap Configurator
+
+on:
+  push:
+    branches:
+      - extract-wrap-configurator
+    paths:
+      - '.github/workflows/extract-wrap.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract ZIP
+        run: |
+          mkdir -p wrap-configurator
+          unzip -o 'Wrap-Configurator-App-Sorgenti (2).zip' -d wrap-configurator
+
+      - name: Commit extracted sources
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add wrap-configurator
+          if git diff --cached --quiet; then
+            echo 'No changes to commit'
+          else
+            git commit -m 'Extract Wrap Configurator sources'
+            git push
+          fi
